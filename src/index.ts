@@ -32,7 +32,9 @@ enum Help {
     ping = "> Get the pong time in ms",
     pong = "> Get the ping time in ms",
     echo = "> Copy the message that you replied to, and send it.",
-    botted = "> Check if the message was sent by the bot or not"
+    botted = "> Check if the message was sent by the bot or not",
+    "3y3" = "> Convert to or from 3y3 encoded text.\n" +
+        "> You can also go here: https://synthetic.garden/3y3.htm"
 }
 
 client.on('message_create', async (message: Message) => {
@@ -89,6 +91,10 @@ Available commands:
         case "botted":
             let result = message.fromMe;
             await respond(`> ${result}`);
+            break;
+
+        case "3y3":
+            await respond(`Not implemented :skull:`);
             break;
 
         default:
