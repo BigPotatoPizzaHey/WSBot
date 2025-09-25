@@ -18,9 +18,13 @@ export function lexarg(cmd: string): string[] {
                 break;
 
             case '"':
-                const end = lickJSON(cmd, i);
-                ret.push(cmd.slice(i, end));
-                i = end;
+                try {
+                    const end = lickJSON(cmd, i);
+                    ret.push(JSON.parse(cmd.slice(i, end)));
+                    i = end;
+                } catch (e) {
+                    curr += c;
+                }
                 break;
 
             default:
