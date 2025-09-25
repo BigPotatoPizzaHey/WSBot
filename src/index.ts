@@ -8,6 +8,8 @@ const minimist: (args: string[]) => Record<string, string | string[]> = require(
 import {lexarg} from "./lib/lexarg";
 import {secondSightify} from "./lib/eye";
 
+const BOTTED_MSG = secondSightify('@NOREPLY.BPPH');
+
 const client = new Client({
     puppeteer: {
         headless: true,
@@ -50,13 +52,24 @@ client.on('message_create', async (message: Message) => {
     if (!(body.startsWith(".m ") || body === '.m')) {
         return;
     }
+    if (body.endsWith(BOTTED_MSG) && message.fromMe) {
+        return;
+    }
+
     const latency = Date.now() - message.timestamp * 1000;
     const kwargs = minimist(lexarg(body));
     const args = kwargs['_'];
     const cmd = args.length > 1 ? args[1] : '';
 
+    function mkResp(msg: string): string {
+        if (!msg.endsWith(BOTTED_MSG)) {
+            msg += BOTTED_MSG;
+        }
+        return msg;
+    }
+
     async function respond(msg: string) {
-        return await message.reply(msg);
+        return await message.reply(mkResp(msg));
     }
 
     function helpMsg(cmd: string = ''): string {
@@ -79,6 +92,7 @@ Available commands:
     }
 
     let result;
+    let argMsg;
 
     switch (cmd) {
         case "ping":
@@ -90,11 +104,12 @@ Available commands:
         case "echo":
             const quoted = await message.getQuotedMessage();
             const echo = quoted ? quoted.body : 'Couldn\'t fetch message.';
-            await respond(`> ${echo}`);
+            await respond(echo);
             break;
 
         case "botted":
-            result = message.fromMe;
+            argMsg = await message.getQuotedMessage() ?? message;
+            result = argMsg.fromMe && argMsg.body.endsWith(BOTTED_MSG);
             await respond(`> ${result}`);
             break;
 
