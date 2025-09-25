@@ -5,6 +5,7 @@ const {Client, LocalAuth} = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const minimist: (args: string[]) => Record<string, string | string[]> = require('minimist');
 // import {string_to_unicode_variant} from "string-to-unicode-variant";
+import {lexarg} from "./lib/lexarg";
 
 const client = new Client({
     puppeteer: {
@@ -44,7 +45,7 @@ client.on('message_create', async (message: Message) => {
         return;
     }
     const latency = Date.now() - message.timestamp * 1000;
-    const kwargs = minimist(body.split(' '));
+    const kwargs = minimist(lexarg(body));
     const args = kwargs['_'];
     const cmd = args.length > 1 ? args[1] : '';
 
