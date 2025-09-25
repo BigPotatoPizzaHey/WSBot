@@ -9,8 +9,6 @@ export function lexarg(cmd: string): string[] {
     for (let i = 0; i < cmd.length; i++) {
         const c = cmd.charAt(i);
 
-        console.log(c)
-
         switch (c) {
             case ' ':
                 ret.push(curr);

@@ -6,6 +6,7 @@ const qrcode = require('qrcode-terminal');
 const minimist: (args: string[]) => Record<string, string | string[]> = require('minimist');
 // import {string_to_unicode_variant} from "string-to-unicode-variant";
 import {lexarg} from "./lib/lexarg";
+import {secondSightify} from "./lib/eye";
 
 const client = new Client({
     puppeteer: {
@@ -34,7 +35,8 @@ enum Help {
     echo = "> Copy the message that you replied to, and send it.",
     botted = "> Check if the message was sent by the bot or not",
     "3y3" = "> Convert to or from 3y3 encoded text.\n" +
-        "> You can also go here: https://synthetic.garden/3y3.htm"
+        "> You can also go here: https://synthetic.garden/3y3.htm",
+    eye = Help["3y3"]
 }
 
 client.on('message_create', async (message: Message) => {
@@ -75,6 +77,8 @@ Available commands:
         return;
     }
 
+    let result;
+
     switch (cmd) {
         case "ping":
         case "pong":
@@ -89,12 +93,15 @@ Available commands:
             break;
 
         case "botted":
-            let result = message.fromMe;
+            result = message.fromMe;
             await respond(`> ${result}`);
             break;
 
+        case "eye":
         case "3y3":
-            await respond(`Not implemented :skull:`);
+            const text = args[2] ?? 'nothing';
+            result = secondSightify(text);
+            await respond(`${JSON.stringify(text)} -> ${JSON.stringify(result)}`);
             break;
 
         default:
