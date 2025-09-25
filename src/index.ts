@@ -39,7 +39,22 @@ enum Help {
     "3y3" = "> Convert to or from 3y3 encoded text.\n" +
         "> The stuff in the quotes after the arrow `->` has hidden 3y3 characters in it. It's invisible!\n" +
         "> You can also go here: https://synthetic.garden/3y3.htm",
-    eye = Help["3y3"]
+    eye = Help["3y3"],
+    help = "> Show this help message."
+}
+
+function helpMsg(cmd: string = ''): string {
+    if (Object.keys(Help).includes(cmd)) {
+        const msg = Help[cmd as keyof typeof Help];
+        return `Help for \`${cmd}\`:\n${msg}`;
+    }
+    const keys = Object.keys(Help);
+    const keysMsg = keys.join('\n- ');
+
+    return `\
+\`Help\`:
+Available commands:
+- ${keysMsg}`;
 }
 
 client.on('message_create', async (message: Message) => {
@@ -70,20 +85,6 @@ client.on('message_create', async (message: Message) => {
 
     async function respond(msg: string) {
         return await message.reply(mkResp(msg));
-    }
-
-    function helpMsg(cmd: string = ''): string {
-        if (Object.keys(Help).includes(cmd)) {
-            const msg = Help[cmd as keyof typeof Help];
-            return `Help for \`${cmd}\`:\n${msg}`;
-        }
-        const keys = Object.keys(Help);
-        const keysMsg = keys.join('\n- ');
-
-        return `\
-Help:
-Available commands:
-- ${keysMsg}`;
     }
 
     if (kwargs.h) {
@@ -117,7 +118,14 @@ Available commands:
         case "3y3":
             const text = args[2] ?? 'nothing';
             result = secondSightify(text);
-            await respond(`${JSON.stringify(text)} -> ${JSON.stringify(result)}`);
+            await respond(`> Converting to/from 3y3 encoded text. \n` +
+                `> Note that 3y3 text is invisible. Copy paste the text in the "quotes" after the \`->\` and send it back to \`.m 3y3\` to decode it\n` +
+                `${JSON.stringify(text)} -> ${JSON.stringify(result)}`);
+            break;
+
+        case "help":
+            const helpCmd = args[2] ?? '';
+            await respond(helpMsg(helpCmd));
             break;
 
         default:
