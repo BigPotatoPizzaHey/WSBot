@@ -1,14 +1,14 @@
 // Tokenise a command string into a list of tokens.
 
-function readString() {
-
-}
+import {lickJSON} from "./jsonConsumer";
 
 export function lexarg(cmd: string): string[] {
     const ret: string[] = [];
     let curr = '';
 
-    Array.from(cmd).forEach((c) => {
+    for (let i = 0; i < cmd.length; i++) {
+        const c = cmd.charAt(i);
+
         console.log(c)
 
         switch (c) {
@@ -17,10 +17,16 @@ export function lexarg(cmd: string): string[] {
                 curr = '';
                 break;
 
+            case '"':
+                const end = lickJSON(cmd, i);
+                ret.push(cmd.slice(i, end));
+                i = end;
+                break;
+
             default:
                 curr += c;
         }
-    });
+    }
 
     if (curr !== '') {
         ret.push(curr);
@@ -30,5 +36,5 @@ export function lexarg(cmd: string): string[] {
 }
 
 if (require.main === module) {
-    console.log(lexarg('hey there'));
+    console.log(lexarg(`hey there "buddy boo yeet " aaaa ' aa'`));
 }
