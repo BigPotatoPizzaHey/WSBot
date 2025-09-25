@@ -31,7 +31,8 @@ client.on('qr', (qr: string) => {
 enum Help {
     ping = "> Get the pong time in ms",
     pong = "> Get the ping time in ms",
-    echo = "> Copy the message that you replied to, and send it."
+    echo = "> Copy the message that you replied to, and send it.",
+    botted = "> Check if the message was sent by the bot or not"
 }
 
 client.on('message_create', async (message: Message) => {
@@ -83,6 +84,11 @@ Available commands:
             const quoted = await message.getQuotedMessage();
             const echo = quoted ? quoted.body : 'Couldn\'t fetch message.';
             await respond(`> ${echo}`);
+            break;
+
+        case "botted":
+            let result = message.fromMe;
+            await respond(`> ${result}`);
             break;
 
         default:
