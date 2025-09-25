@@ -35,6 +35,7 @@ enum Help {
     echo = "> Copy the message that you replied to, and send it.",
     botted = "> Check if the message was sent by the bot or not",
     "3y3" = "> Convert to or from 3y3 encoded text.\n" +
+        "> The stuff in the quotes after the arrow `->` has hidden 3y3 characters in it. It's invisible!\n" +
         "> You can also go here: https://synthetic.garden/3y3.htm",
     eye = Help["3y3"]
 }
