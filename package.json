@@ -1,0 +1,19 @@
+{
+  "name": "wsbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "minimist": "^1.2.8",
+    "qrcode-terminal": "^0.12.0",
+    "string-to-unicode-variant": "^1.0.9",
+    "whatsapp-web.js": "^1.34.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3"
+  },
+  "private": true
+}
